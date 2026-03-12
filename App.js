@@ -14,32 +14,24 @@ export default function App() {
   const [palavraAtual, setPalavraAtual] = useState('');
   const [dicaAtual, setDicaAtual] = useState('');
   const [letrasDescobertas, setLetrasDescobertas] = useState([]);
-  const [vidas, setVidas] = useState(5); // Começamos com 5 chances
+  const [vidas, setVidas] = useState(5);
   
   const alfabeto = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-  // --- 1. Sorteio Inicial ---
-  // O useEffect com [] vazio roda apenas UMA vez quando o app abre
   useEffect(() => {
     sortearPalavra();
   }, []);
 
-  // --- 2. Monitor de Vitória/Derrota ---
-  // Toda vez que 'vidas' ou 'letrasDescobertas' mudar, ele roda isso
   useEffect(() => {
-    // Se ainda não tem palavra (no carregamento), não faz nada
     if (!palavraAtual) return;
 
-    // Checar Derrota
     if (vidas <= 0) {
       Alert.alert("Game Over!", `A palavra era: ${palavraAtual}`, [
         { text: "Tentar De Novo", onPress: sortearPalavra }
       ]);
-      return; // Para por aqui
+      return;
     }
 
-    // Checar Vitória
-    // Verifica se TODAS as letras da palavra estão na lista de descobertas
     const ganhou = palavraAtual.split('').every(letra => letrasDescobertas.includes(letra));
     
     if (ganhou) {
@@ -48,30 +40,26 @@ export default function App() {
       ]);
     }
 
-  }, [vidas, letrasDescobertas]); // Lista de dependências (o que ele vigia)
-
-
-  // --- Funções de Ação ---
+  }, [vidas, letrasDescobertas]);
 
   function sortearPalavra() {
-    // Escolhe um número aleatório entre 0 e o tamanho do banco
+
     const indiceAleatorio = Math.floor(Math.random() * BANCO_PALAVRAS.length);
     const sorteada = BANCO_PALAVRAS[indiceAleatorio];
 
     setPalavraAtual(sorteada.palavra);
     setDicaAtual(sorteada.dica);
-    setLetrasDescobertas([]); // Limpa as tentativas
-    setVidas(5); // Reseta as vidas
+    setLetrasDescobertas([]); 
+    setVidas(5); 
   }
 
   function adivinharLetra(letra) {
-    if (vidas <= 0) return; // Se já perdeu, não deixa clicar
-    if (letrasDescobertas.includes(letra)) return; // Se já clicou, ignora
+    if (vidas <= 0) return; 
+    if (letrasDescobertas.includes(letra)) return;
 
     setLetrasDescobertas([...letrasDescobertas, letra]);
 
     if (!palavraAtual.includes(letra)) {
-      // Se errou, tira uma vida
       setVidas(vidas - 1);
     }
   }
@@ -80,7 +68,7 @@ export default function App() {
     <View style={styles.container}>
       <Text style={styles.titulo}>EduForca 🎓</Text>
       
-      {/* Placar de Vidas */}
+      {}
       <View style={styles.placar}>
         <Text style={styles.textoVidas}>Vidas: {'❤️'.repeat(vidas)}</Text>
       </View>
@@ -105,7 +93,6 @@ export default function App() {
           const foiClicado = letrasDescobertas.includes(letra);
           const acertou = palavraAtual.includes(letra);
           
-          // Estilo dinâmico: Se clicou e acertou (verde), se clicou e errou (vermelho), senão (azul)
           let estiloBotao = styles.botaoLetra;
           if (foiClicado && acertou) estiloBotao = [styles.botaoLetra, styles.botaoCerto];
           if (foiClicado && !acertou) estiloBotao = [styles.botaoLetra, styles.botaoErrado];
@@ -180,11 +167,11 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
     color: '#34495e',
-    minWidth: 30, // Garante largura mínima
+    minWidth: 30, 
     textAlign: 'center',
   },
   traco: {
-    color: '#bdc3c7', // Cor mais clara para o traço não assustar
+    color: '#bdc3c7',
   },
   teclado: {
     flexDirection: 'row',
